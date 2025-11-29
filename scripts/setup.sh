@@ -103,12 +103,29 @@ install_cowrie() {
 install_cyberpot() {
     echo -e "${YELLOW}Installing CyberPot...${NC}"
 
-    cd "$CYBERPOT_DIR"
+    # Ensure CYBERPOT_DIR exists and is writable
+    if [ ! -d "$CYBERPOT_DIR" ]; then
+        echo "Creating CyberPot directory..."
+        mkdir -p "$CYBERPOT_DIR" || {
+            echo -e "${RED}Error: Cannot create $CYBERPOT_DIR${NC}"
+            echo "Please check permissions or run with appropriate privileges"
+            exit 1
+        }
+    fi
+
+    cd "$CYBERPOT_DIR" || {
+        echo -e "${RED}Error: Cannot access $CYBERPOT_DIR${NC}"
+        exit 1
+    }
 
     # Create virtual environment if it doesn't exist
     if [ ! -d "venv" ]; then
         echo "Creating Python virtual environment..."
-        python3 -m venv venv
+        python3 -m venv venv || {
+            echo -e "${RED}Error: Failed to create virtual environment${NC}"
+            echo "Please check that you have write permissions to $CYBERPOT_DIR"
+            exit 1
+        }
     fi
 
     # Install CyberPot
