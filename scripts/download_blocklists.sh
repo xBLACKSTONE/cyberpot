@@ -67,9 +67,8 @@ download_blocklist "blocklist-de-bruteforce" \
 download_blocklist "ci-army" \
     "http://cinsscore.com/list/ci-badguys.txt"
 
-# Talos Intelligence - IP Blacklist
-download_blocklist "talos" \
-    "https://www.talosintelligence.com/documents/ip-blacklist"
+# Note: Talos Intelligence public IP blacklist is no longer available at the old URL
+# If you have a Talos account, you can add custom feeds here
 
 # Spamhaus DROP - Do Not Route Or Peer
 echo -e "${YELLOW}Downloading Spamhaus DROP...${NC}"
