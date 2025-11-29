@@ -80,7 +80,7 @@ if curl -f -L "https://www.spamhaus.org/drop/drop.txt" -o "$BLOCKLIST_DIR/spamha
 
     rm "$BLOCKLIST_DIR/spamhaus-drop.txt.tmp"
 
-    local count=$(wc -l < "$BLOCKLIST_DIR/spamhaus-drop.txt")
+    count=$(wc -l < "$BLOCKLIST_DIR/spamhaus-drop.txt")
     echo -e "${GREEN}✓ Downloaded Spamhaus DROP ($count ranges)${NC}"
 else
     echo -e "${RED}✗ Failed to download Spamhaus DROP${NC}"
@@ -93,7 +93,7 @@ cat "$BLOCKLIST_DIR"/*.txt 2>/dev/null | \
 grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}' | \
 sort -u > "$BLOCKLIST_DIR/combined.txt"
 
-local total=$(wc -l < "$BLOCKLIST_DIR/combined.txt")
+total=$(wc -l < "$BLOCKLIST_DIR/combined.txt")
 echo -e "${GREEN}✓ Combined blocklist created ($total unique IPs)${NC}"
 
 echo ""
