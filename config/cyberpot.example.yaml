@@ -1,0 +1,137 @@
+# CyberPot Configuration File
+# Copy this to cyberpot.yaml and customize for your environment
+
+cowrie:
+  # Path to Cowrie JSON log file
+  log_path: "/opt/cowrie/var/log/cowrie/cowrie.json"
+
+core:
+  # Number of log lines to backfill on startup
+  backfill_lines: 1000
+
+storage:
+  # Maximum number of events to keep in memory
+  max_events: 10000
+
+  # Maximum number of sessions to track
+  max_sessions: 5000
+
+  # Maximum number of alerts to keep
+  max_alerts: 1000
+
+  # Time windows for statistics (in seconds)
+  # Default: [3600, 86400, 604800] = 1 hour, 1 day, 1 week
+  time_windows: [3600, 86400, 604800]
+
+enrichment:
+  geoip:
+    # Enable GeoIP enrichment
+    enabled: true
+
+    # Path to MaxMind GeoLite2-City database
+    database_path: "data/geoip/GeoLite2-City.mmdb"
+
+    # LRU cache size for GeoIP lookups
+    cache_size: 10000
+
+  threat_intel:
+    # Enable threat intelligence enrichment
+    enabled: true
+
+    # Paths to IP blocklist files
+    blocklist_paths:
+      - "data/blocklists/feodo.txt"
+      - "data/blocklists/emerging-threats.txt"
+      - "data/blocklists/blocklist-de-ssh.txt"
+      - "data/blocklists/blocklist-de-bruteforce.txt"
+      - "data/blocklists/ci-army.txt"
+      - "data/blocklists/talos.txt"
+      - "data/blocklists/combined.txt"
+
+    # GreyNoise Community API key (optional)
+    # Sign up at: https://www.greynoise.io/viz/signup
+    greynoise_api_key: ""
+
+    # Cache TTL for GreyNoise lookups (in seconds)
+    cache_ttl: 86400  # 24 hours
+
+alerts:
+  # Path to alert rules file
+  rules_file: "config/alert_rules.yaml"
+
+  # Alert deduplication window (in seconds)
+  dedup_window: 300  # 5 minutes
+
+tui:
+  # TUI refresh rate (in seconds)
+  refresh_rate: 1.0
+
+  # Enable mouse support
+  enable_mouse: true
+
+irc:
+  # Enable IRC bot
+  enabled: false
+
+  # IRC server settings
+  server: "irc.libera.chat"
+  port: 6667
+  use_ssl: false
+
+  # Bot identity
+  nickname: "cyberpot"
+  username: "cyberpot"
+  realname: "CyberPot Monitoring Bot"
+
+  # Channels to join (with optional keys)
+  channels:
+    - "#cyberpot"
+    # - "#channel key"
+
+  # Authentication
+  auth:
+    # Authentication method: none, nickserv, sasl
+    method: "none"
+
+    # Password for NickServ or SASL
+    password: ""
+
+  # Alert settings
+  alerts:
+    # Use IRC color codes
+    use_colors: true
+
+    # Use emoji in messages
+    use_emoji: true
+
+    # Maximum message length
+    max_length: 400
+
+    # Rate limiting
+    rate_limit:
+      # Maximum messages per minute
+      max_per_minute: 10
+
+      # Burst capacity (immediate messages before rate limiting)
+      burst: 3
+
+      # Aggregation window for queued alerts (in seconds)
+      aggregation_window: 60
+
+    # Severity filtering
+    severity_filter:
+      # Enable filtering
+      enabled: true
+
+      # Minimum severity to send (INFO, LOW, MEDIUM, HIGH, CRITICAL)
+      min_severity: "MEDIUM"
+
+logging:
+  # Log level: DEBUG, INFO, WARNING, ERROR
+  level: "INFO"
+
+  # Log format: json, console
+  format: "console"
+
+  # Log file path (optional, logs to stdout if not set)
+  file: ""

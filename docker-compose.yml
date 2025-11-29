@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  # Cowrie Honeypot
+  cowrie:
+    image: cowrie/cowrie:latest
+    container_name: cyberpot-cowrie
+    restart: unless-stopped
+    ports:
+      - "2222:2222/tcp"  # SSH
+      - "2223:2223/tcp"  # Telnet
+    volumes:
+      - ./docker/cowrie/etc:/cowrie/cowrie-git/etc
+      - cowrie_var:/cowrie/cowrie-git/var
+      - cowrie_downloads:/cowrie/cowrie-git/var/lib/cowrie/downloads
+    environment:
+      - COWRIE_LOG_PATH=/cowrie/cowrie-git/var/log/cowrie/cowrie.json
+    networks:
+      - cyberpot
+
+  # CyberPot Monitoring System
+  cyberpot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cyberpot-monitor
+    restart: unless-stopped
+    depends_on:
+      - cowrie
+    volumes:
+      - cowrie_var:/opt/cowrie/var:ro  # Read-only access to Cowrie logs
+      - ./config:/app/config
+      - ./data:/app/data
+      - ./logs:/app/logs
+    environment:
+      - CYBERPOT_CONFIG=/app/config/cyberpot.yaml
+      - PYTHONUNBUFFERED=1
+    networks:
+      - cyberpot
+    # For TUI mode, use:
+    # stdin_open: true
+    # tty: true
+    # command: python -m cyberpot start --mode tui
+
+  # Optional: IRC Bot (if running separately)
+  # cyberpot-irc:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: cyberpot-irc
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - cyberpot
+  #   volumes:
+  #     - ./config:/app/config
+  #     - ./logs:/app/logs
+  #   environment:
+  #     - CYBERPOT_CONFIG=/app/config/cyberpot.yaml
+  #   command: python -m cyberpot start --mode headless
+  #   networks:
+  #     - cyberpot
+
+networks:
+  cyberpot:
+    driver: bridge
+
+volumes:
+  cowrie_var:
+    driver: local
+  cowrie_downloads:
+    driver: local
