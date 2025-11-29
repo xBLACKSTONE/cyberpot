@@ -16,13 +16,6 @@ PYTHON_VERSION="3.11"
 echo -e "${GREEN}=== CyberPot Setup Script ===${NC}"
 echo ""
 
-# Check if running as root
-if [ "$EUID" -eq 0 ]; then
-    echo -e "${RED}Error: Do not run this script as root${NC}"
-    echo "Run as a regular user. Sudo will be used when needed."
-    exit 1
-fi
-
 # Function to check if command exists
 command_exists() {
     command -v "$1" >/dev/null 2>&1
